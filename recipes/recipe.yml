@@ -17,11 +17,11 @@ modules:
       - source: system
         destination: / # copies files/system/* (* means everything inside it) into your image's root folder /
 
-  - type: script
-    snippets:
-      - "dnf install -y gcc make kernel-devel git"
-      - "git clone https://github.com/ronnyf/aic8800.git /tmp/aic8800"
-      - "KVER=$(ls /lib/modules | head -n 1) && cd /tmp/aic8800 && make KVER=$KVER KSRC=/lib/modules/$KVER/build && make install"
+- type: script
+  snippets:
+    - "dnf install -y gcc make git kernel-bazzite-devel || dnf install -y gcc make git kernel-devel"
+    - "git clone https://github.com/ronnyf/aic8800.git /tmp/aic8800"
+    - "KVER=$(ls /lib/modules | head -n 1) && cd /tmp/aic8800 && make KSRC=/lib/modules/$KVER/build && make install"
         
   - type: script
     snippets:

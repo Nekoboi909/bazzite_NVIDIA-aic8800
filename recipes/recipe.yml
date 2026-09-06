@@ -6,7 +6,7 @@ name: bazzite_NVIDIA-aic8800
 description: This is my personal OS image.
 
 # the base image to build on top of (FROM) and the version tag to use
-base-image: ghcr.io/ublue-os/bazzite-nvidia-stable-live-amd64
+base-image: ghcr.io/ublue-os/bazzite-nvidia
 image-version: latest # You can pin to a specific version of Fedora as well
 
 # module configuration, executed in order
@@ -16,11 +16,17 @@ modules:
     files:
       - source: system
         destination: / # copies files/system/* (* means everything inside it) into your image's root folder /
+
+  - type: script
+    snippets:
+      - "dnf install -y gcc make kernel-devel git"
+      - "git clone https://github.com/ronnyf/aic8800.git /tmp/aic8800"
+      - "KVER=$(ls /lib/modules | head -n 1) && cd /tmp/aic8800 && make KVER=$KVER KSRC=/lib/modules/$KVER/build && make install"
         
   - type: script
     snippets:
       - "git clone https://github.com/ronnyf/aic8800.git /tmp/aic8800"
-      - "cd /tmp/aic8800 && make && make install"
+      - "cd /tmp/aic8800 && make && make install"   
     
   - type: dnf
     repos:
